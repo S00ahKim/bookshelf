@@ -54,17 +54,17 @@
   ```
 
 ### 구현 순서
-1. Cloneable 인터페이스를 구현한다.
+1. **Cloneable 인터페이스를 구현한다.**
     ```java
     public class Foo implements Cloneable {...};
     ```
-2. clone 메서드를 public으로 선언한다.
-3. try-catch 구조를 만든다.
-4. try 안에서 super.clone 을 호출한다.
+2. **clone 메서드를 public으로 선언한다.**
+3. **try-catch 구조를 만든다.**
+4. **try 안에서 super.clone 을 호출한다.**
     * clone은 강제성이 없는 생성자 연쇄(this 또는 super 키워드를 사용해서 생성자에서 다른 생성자를 호출하는 기술)와 유사하다. 따라서 clone 안에서 super.clone 이 아니라 생성자를 호출해도 컴파일 에러는 나지 않는다. 그러나 A <- B <- C 의 관계에서, B의 clone()이 new B() 를 호출한다면, C의 clone()은 잘못된 동작을 하게 된다.
     * super.clone을 해줘야 재귀적으로 부모 클래스의 super.clone도 호출해주면서 의도한 복제를 모두 수행할 수 있다.
     * 상속할 일이 없는 경우(final 클래스 등)라면 무시해도 되고, 굳이 Cloneable을 구현할 필요도 없다.
-5. 내부 로직에서 적절히 수정해준다.
+5. **내부 로직에서 적절히 수정해준다.**
     * 왜 수정해야 하는가?
         + clone된 객체와 원본 객체는 독립적이어야 한다.
             - 객체의 내부 깊은 구조에 숨은 모든 가변 객체를 복사하고,
@@ -96,11 +96,11 @@
             - 런타임 타입? 프로그램이 실행되는 동안 실제로 할당되는 객체의 타입
             - 컴파일타임 타입? 코드를 컴파일할 때 변수나 표현식에 할당된 타입
             - ex. `Animal animal = new Dog();` 일 때, animal의 컴파일 타입은 Animal이고 런타임 타입은 Dog다.
-6. 클라이언트가 형변환하지 않아도 되도록 리턴 타입을 해당 객체로 공변 반환 타이핑(covariant return typing)한다.
-    * 공변? B가 A의 부분집합일 때 고차함수 T에 대해 T<B> 도 T<A> 의 부분집합이 된다.
+6. **클라이언트가 형변환하지 않아도 되도록 리턴 타입을 해당 객체로 공변 반환 타이핑(covariant return typing)한다.**
+    * 공변? B가 A의 부분집합일 때 고차함수 T에 대해 `T<B>` 도 `T<A>` 의 부분집합이 된다.
     * a.k.a. 부모 클래스 메서드를 오버라이딩할 때, 해당 메서드의 리턴 타입은 자식 클래스 타입으로 변경할 수 있다.
     * `Object clone()` 을 `Foo clone()` 으로 정의할 수 있다는 의미
-7. catch 안에서 CloneNotSupportedException 을 잡아준다.
+7. **catch 안에서 CloneNotSupportedException 을 잡아준다.**
     * 왜? Object의 clone이 checked exception을 던지기 때문
     * Cloneable을 구현했기 때문에 발생할 일이 없음
     * cf. CloneNotSupportedException은 unchecked exception이어야 했다는 신호 (item71)
@@ -232,3 +232,5 @@ public Object clone() {
         HashSet<Integer> hashSet = new HashSet<>();
         TreeSet<Integer> treeSet = new TreeSet<>(hashSet);
         ``` 
+
+
