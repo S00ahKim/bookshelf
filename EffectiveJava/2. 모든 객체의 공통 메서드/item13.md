@@ -234,3 +234,6 @@ public Object clone() {
         ``` 
 
 
+## 참고
+- [java.lang.Object.clone 메소드](https://johngrib.github.io/wiki/java/object-clone/)
+- [자바 배열을 복사하는 다양한 방법 (깊은복사, 얕은복사)](https://coding-factory.tistory.com/548)
