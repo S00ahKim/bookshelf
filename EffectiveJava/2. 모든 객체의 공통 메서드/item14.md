@@ -6,6 +6,9 @@
 - `equals()`와 차이
     * 순서 비교 가능
     * 제네릭함
+        + generic? 클래스나 메서드를 작성할 때 타입을 일반화하는 기능
+        + 실제로 사용되는 타입이 아니라 추상화된 타입 매개변수를 사용한다.
+        + ex `ArrayList<E>`
     * Object 안에 정의된 메서드가 아님
 - 활용 예
     * 정렬
@@ -35,8 +38,8 @@
         + fn(x.compareTo(y)) == 0 이면 fn(x.compareTo(z)) == fn(y.compareTo(z))
     * compareTo의 동치성 테스트는 equals의 동치성 테스트와 결과가 같을 것을 권한다.
         + (x.compareTo(y) == 0) == (x.equals(y)) 
-        + `필수는 아니지만 지키지 않을 경우 별도 표기 권고`. 
-        + 왜? 정렬된 컬렉션에서 사용시 의도와 다르게 작동할 수 있음. (정렬된 클래스는 equals가 아니라 compareTo를 사용함)
+        + **필수는 아니지만 지키지 않을 경우 별도 표기 권고**. 
+        + 왜? 정렬된 컬렉션에서 사용시 의도와 다르게 작동할 수 있음. (**정렬된 클래스는 equals가 아니라 compareTo를 사용**함)
         + 지켜지지 않은 예?
             - `var a = new BigDecimal("1.0")`, `var b = new BigDecimal("1.00")`
             - `a.equals(b) == false`
@@ -52,6 +55,18 @@
 ### equals와의 차이점을 주의하자.
 - compareTo 메서드의 파라미터 타입은 컴파일타임에 정해지므로, 타입체크/형변환이 불필요하다.
     * 이유? Comparable은 타입을 인수로 받는 제네릭 인터페이스이기 때문
+    * ```java
+      // 런타임에 ClassCastException이 발생
+      Object obj = "Hello";
+      Integer num = (Integer) obj;
+      System.out.println(num);
+
+      // 컴파일 에러가 발생
+      Box<String> box = new Box<>();
+      box.set("Hello");
+      Integer num = box.get();
+      System.out.println(num);
+      ```
 - null을 파라미터로 받는 경우 NPE를 던져야 한다.
 - Comparable을 구현하지 않은 필드나 표준이 아닌 순서로 비교해야 한다면 Comparator를 사용한다.
     * 비교자(Comparator)는 직접 만들거나 자바가 제공하는 것을 사용
