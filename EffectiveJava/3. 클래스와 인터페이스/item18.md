@@ -134,6 +134,8 @@
       }
       ``` 
     * 기존 클래스의 메서드를 사용하는 방법? 인스턴스 메서드(=전달 메서드)가 기존 클래스의 메서드를 호출(=전달)하게 하기
+        + 재사용 가능한 전달 클래스를 인터페이스당 하나씩 만들어두면 원하는 기능을 쉽게 덧씌울 수 있다.
+        + ex. `Guava`는 모든 컬렉션 인터페이스용 전달 메서드를 전부 구현했다. 
     * 장점?
         + 내부 구현을 불필요하게 노출하지 않음
             - 노출시, API는 내부 구현에 묶이고 성능도 제한되며 클라이언트가 접근 가능해져 혼란 유발
@@ -145,8 +147,51 @@
           ```
     * 더 알아보기
         + 다른 Set인스턴스를 감싸고 있어서 이런 클래스를 Wrapper Class 라고도 함
+          - 단점이 거의 없다!
+          - 단 콜백 프레임워크와는 어울리지 않는다.
+              * 왜? SELF 문제
+                    ```java
+                     class Babysitter {
+                        private Baby baby;
+
+                        public void sleepBaby() {
+                            baby.sleep();
+                            alarm.wakeMeUp(baby, 10L); // babysitter가 아니라 baby를 넘김
+                        }
+                     }
+
+                     class Alarm {
+                        public void wakeMeUp(Human human, Long minutes) {
+                            holdOnForMinutes(minutes);
+                            human.wakeUp(); // Alarm이 깨우는 것은 전달받은 baby
+                        }
+                     }
+                    ```          
+                  1. 자기 자신의 참조를 다른 객체에 넘겨서 콜백에서 사용하게 함
+                  2. 내부 객체는 래퍼의 존재를 모르므로 자신this을 넘김
+                  3. 콜백은 래퍼가 아닌 내부 객체를 호출함
+              * **S**coping (스코핑): 래퍼 클래스를 사용하면서 콜백 함수 내에서 접근할 수 있는 변수들의 스코프가 제한됩니다. 이로 인해 래퍼 클래스 외부의 변수나 상태에 접근하기 어려워집니다.
+              * **E**ncapsulation (캡슐화): 콜백 프레임워크에서 래퍼 클래스를 사용하면 콜백 함수와 래퍼 클래스 사이의 캡슐화가 어려워집니다. 이로 인해 콜백 함수와 래퍼 클래스 간의 상호작용을 제어하기 어려울 수 있습니다.
+              * **L**ifetime (수명): 래퍼 클래스의 수명과 콜백 함수의 호출 시점과 수명이 서로 다를 수 있습니다. 따라서 래퍼 클래스가 콜백 함수에 필요한 상태를 유지하기 어려울 수 있습니다.
+              * **F**unction calls (함수 호출): 콜백 프레임워크에서 래퍼 클래스를 사용하면 함수 호출의 순서와 제어 흐름이 복잡해질 수 있습니다. 이로 인해 예상치 못한 버그가 발생할 수 있습니다.
         + 다른 Set에 계측 기능을 덧씌운다는 의미에서 Decorator Pattern이 적용되었다고도 함
-        + 컴포지션 + 전달 조합에서 래퍼 객체가 내부 객체에 자기 자신의 참조를 넘기는 경우 위임(Delegation)이라고도 함
+        + 컴포지션 + 전달 조합을 위임(Delegation)이라고도 함
+          ```java
+          public class Babysitter {
+              private String name;
+              private Baby baby;
+
+              // 컴포지션으로 가져온 클래스의 메서드를 호출하게 하면 위임
+              public void feed() {
+                  baby.feed();
+              }
+
+              // 엄밀하게 래퍼 객체가 내부 객체에 자기 자신의 참조를 넘기는 경우만 위임이라고 보기도 함
+              public Sound sayMyName(Babysitter babysitter) {
+                  baby.sayMyName(babysitter);
+              }
+          }
+          ``` 
 
 
 ## 그래도 상속하고 싶을 때 고려할 것들
