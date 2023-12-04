@@ -21,7 +21,21 @@ foo.map(Foo::calculateComplexSummation)
     * 클래스 생성자: `TreeMap<K, V>::new` (람다: `() -> new TreeMap<K, V>()`)
     * 배열 생성자: `int[]::new` (람다: `len -> new int[len]`)
 - 제네릭 함수 타입
+    ```java
+    interface G1 {
+        <E extends Exception> Object m() throws E;
+    }
+
+    interface G2 {
+        <F extends Exception> String m() throws F;
+    }
+
+    interface G extends G1, G2 {
+    }
+    ``` 
     * 일반적으로 람다로 할 수 없다면 메서드 참조로도 할 수 없으나, 오직 메서드 참조만 가능한 예
+    * 함수형 인터페이스 G를 함수 타입으로 표현 시, <F extends Exception> () -> String throws F
+    * 함수형 인터페이스를 위한 제네릭 함수 타입은 메서드 참조 표현식으로만 구현 가능
 
 
 ## 람다가 더 나은 경우
