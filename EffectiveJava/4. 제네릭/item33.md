@@ -1,4 +1,4 @@
-# 타입 안전 이종 컨테이너를 고려하라
+# 타입 안전 이종 컨테이너를 고려하라 
 
 ## 타입 안전 이종 컨테이너
 - type safe heterogeneous container
